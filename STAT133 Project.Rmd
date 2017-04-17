@@ -1,0 +1,125 @@
+---
+title: "STAT133 Final Project"
+author: "Vedika Agarwal, Grant Laut, Michael Chang"
+date: ""
+output: 
+  html_document:
+    fig_height: 6
+    fig_width: 10
+---
+<!-- Don't edit in between this line and the one below -->
+```{r include=FALSE}
+# Don't delete this chunk if you are using the DataComputing package
+library(DataComputing)
+library(ggthemes)
+library(tidyr)
+```
+*Source file* 
+```{r, results='asis', echo=FALSE}
+includeSourceDocuments()
+```
+<!-- Don't edit the material above this line -->
+
+**Preparing/Cleaning the Data**
+```{r warnings = FALSE}
+data <- read.csv("/Users/MichaelChang/Desktop/stat133/movie_metadata.csv")
+data1 <- data %>% mutate(movie_title=gsub('\x8c\xe6', '', movie_title))
+genres <- data1 %>% separate(genres, c('genre1', 'genre2', 'genre3', 'genre4', 'genre5', 'genre6', 'genre7'), sep = "\\|")
+plotwords  <- data1 %>% separate(plot_keywords, c('plotword1', 'plotword2', 'plotword3', 'plotword4', 'plotword5'), sep = "\\|")
+##write.csv(file=fileName, x=Fail)
+```
+
+
+1. Plots of each director and actor’s total gross and median score to find the most popular actors and directors.
+```{r}
+
+```
+
+2. Plots showing the review scores and gross of each genre to find the most popular genre.
+```{r}
+
+```
+
+3. Plotting the gross revenue against the number of movie facebook likes to see if there is a correlation.
+```{r}
+mean(data1$budget, na.rm=TRUE)
+```
+
+4. Plotting the budget against gross in popular American movies to see if there is a correlation.
+
+3807 USA movies.
+```{r warnings=FALSE}
+return_on_budget <- data1 %>%
+  filter(country == 'USA') 
+nrow(return_on_budget)
+
+return_on_budget_plot <- return_on_budget %>%
+  ggplot(aes(x=budget/100000000, y=gross/100000000)) %>%
+  + geom_point(aes(color=imdb_score), alpha= 0.3) %>%
+  + geom_smooth(method=loess) %>%
+  + labs(title='Budget Efficiency', x="Budget (00,000,000)", y="Gross Revenue (00,000,000)", color = "Score") %>%
+  + theme_igray() %>%
+  + theme(legend.key.size = unit(.3, "cm"))
+return_on_budget_plot
+lm(gross ~ budget, return_on_budget)
+```
+From the linear regression, the slight positive relationship between money spent on production and gross revenue is apparent. 
+
+Since 72.7551% of popular American movies are within an a $100,000,000 budget and $200,000,000 gross revenue, let's examine those cases to see if the correlation still holds true.
+```{r warnings=FALSE}
+return_on_budget_x1_y2 <- return_on_budget %>%
+  filter(budget < 100000000, gross < 200000000)
+
+nrow(return_on_budget_x1_y2)/nrow(return_on_budget)
+
+return_on_budget_plot_x1_y2 <- return_on_budget %>%
+  ggplot(aes(x=budget/100000000, y=gross/100000000)) %>%
+  + geom_point(aes(color=imdb_score), alpha= 0.3) %>%
+  + geom_smooth(method=loess) %>%
+  + labs(title='Budget Efficiency', x="Budget (00,000,000)", y="Gross Revenue (00,000,000)", color = "Score") %>%
+  + theme_igray() %>%
+  + theme(legend.key.size = unit(.3, "cm")) %>%
+  + xlim(0,1) + ylim(0,2)
+return_on_budget_plot_x1_y2
+lm(gross ~ budget, return_on_budget_x1_y2)
+
+```
+There is still a positive, linear correlation between budget spent and gross revenue. 
+The question now is whether larger budgets is equivalent to a larger relative revenues. 
+```{r}
+summary(data1$gross)
+summary(data1$budget)
+
+data2 <- data1 %>% mutate(budget_efficiency = gross/budget)
+
+above_average_budgets <- data2 %>% ##Number of Budgets above average
+  filter(budget > 39750000) %>%
+  tally()
+efficient_above_average_budgets <- data2 %>% ##if budget above average, what is the number of movies that made money
+  filter(budget > 39750000, budget_efficiency > 1) %>%
+  tally()
+
+below_average_budgets <- data2 %>% ##Number of Budgets Below average
+  filter(budget < 39750000) %>%
+  tally()
+efficient_below_average_budgets <- data2 %>% ##if budget below average, what is the number of movies that made money
+  filter(budget < 39750000, budget_efficiency > 1) %>%
+  tally()
+```
+
+```{r}
+efficient_above_average_budgets/above_average_budgets
+efficient_below_average_budgets/below_average_budgets
+```
+As seen in the calculations, the percentage of above average budget movies actually earning back their budget (47.77948%) is higher than the percentage of below average budget movies earning back their budget (43.94453%). Based upon this dataset, popular American movies appear to perform well at the box office if their budget is above the average budget spent on making American movies. 
+
+5. Plotting the content rating against the gross revenue to see which content rated movies are the most successful in terms of revenue. 
+```{r}
+
+```
+
+
+6. Visualizing what are the most popular keywords in the plot keywords.
+```{r}
+
+```
