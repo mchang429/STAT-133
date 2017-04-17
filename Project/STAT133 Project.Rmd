@@ -41,6 +41,12 @@ plotwords  <- data1 %>% separate(plot_keywords, c('plotword1', 'plotword2', 'plo
 ```
 
 3. Plotting the gross revenue against the number of movie facebook likes to see if there is a correlation.
+<<<<<<< HEAD
+=======
+```{r}
+mean(data1$budget, na.rm=TRUE)
+```
+>>>>>>> 8b4abd095fed938508e50c65703c7dd21b1b2403
 
 4. Plotting the budget against gross in popular American movies to see if there is a correlation.
 
@@ -84,8 +90,12 @@ lm(gross ~ budget, return_on_budget_x1_y2)
 
 ```
 There is still a positive, linear correlation between budget spent and gross revenue. 
+<<<<<<< HEAD
 The question now is whether larger budgets is equivalent to a larger relative revenues.
 
+=======
+The question now is whether larger budgets is equivalent to a larger relative revenues. 
+>>>>>>> 8b4abd095fed938508e50c65703c7dd21b1b2403
 ```{r}
 summary(data1$gross)
 summary(data1$budget)
