@@ -63,6 +63,8 @@ return_on_budget_plot <- return_on_budget %>%
 return_on_budget_plot
 lm(gross ~ budget, return_on_budget)
 ```
+Talk about the IMDB score compared to budget/gross.
+
 From the linear regression, the slight positive relationship between money spent on production and gross revenue is apparent. 
 
 Since 72.7551% of popular American movies are within an a $100,000,000 budget and $200,000,000 gross revenue, let's examine those cases to see if the correlation still holds true.
